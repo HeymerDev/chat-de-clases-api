@@ -8,10 +8,42 @@ module.exports.UsersController = {
   getUsers: async (req, res) => {
     try {
       let users = await UserService.getAll();
-    } catch (error) {}
+      Response.success(res, 200, "Lista de Usuarios", users);
+    } catch (error) {
+      debug(error);
+      Response.error(res);
+    }
   },
 
-  getUser: async (req, res) => {},
+  getUser: async (req, res) => {
+    try {
+      const {
+        params: { id },
+      } = req;
+      let user = await UserService.getById(id);
+      if (!user) {
+        Response.error(res, new createError.NotFound());
+      } else {
+        Response.success(res, 200, `Usuario ${id}`, user);
+      }
+    } catch (error) {
+      debug(error);
+      Response.error(res);
+    }
+  },
 
-  createUser: async (req, res) => {},
+  createUser: async (req, res) => {
+    try {
+      const { body } = req;
+      if (!body || Object.keys(body).length === 0) {
+        Response.error(res, new createError.BadRequest());
+      } else {
+        const insertedId = await UserService.create(body);
+        Response.success(res, 201, "Usuario Creado", insertedId);
+      }
+    } catch (error) {
+      debug(error);
+      Response.error(res);
+    }
+  },
 };
