@@ -1,13 +1,13 @@
 const createError = require("http-errors");
 const debug = require("debug")("app:module-users-controller");
 
-const { UserService } = require("./services");
+const { UsersService } = require("./services");
 const { Response } = require("../common/response");
 
 module.exports.UsersController = {
   getUsers: async (req, res) => {
     try {
-      let users = await UserService.getAll();
+      let users = await UsersService.getAll();
       Response.success(res, 200, "Lista de Usuarios", users);
     } catch (error) {
       debug(error);
@@ -20,7 +20,7 @@ module.exports.UsersController = {
       const {
         params: { id },
       } = req;
-      let user = await UserService.getById(id);
+      let user = await UsersService.getById(id);
       if (!user) {
         Response.error(res, new createError.NotFound());
       } else {
@@ -38,7 +38,7 @@ module.exports.UsersController = {
       if (!body || Object.keys(body).length === 0) {
         Response.error(res, new createError.BadRequest());
       } else {
-        const insertedId = await UserService.create(body);
+        const insertedId = await UsersService.create(body);
         Response.success(res, 201, "Usuario Creado", insertedId);
       }
     } catch (error) {

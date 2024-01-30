@@ -10,7 +10,7 @@ const getAll = async () => {
 
 const getById = async (id) => {
   const collection = await DataBase(COLLECTION);
-  return await collection.findOne({ _id: ObjectId(id) });
+  return await collection.findOne({ _id: new ObjectId(id) });
 };
 
 const create = async (user) => {

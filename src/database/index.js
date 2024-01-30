@@ -1,6 +1,6 @@
 const { MongoClient } = require("mongodb");
 const debug = require("debug")("app:database");
-const { Config } = require("./src/config/index");
+const { Config } = require("../config/index");
 let connection = null;
 
 module.exports.DataBase = (collection) =>
