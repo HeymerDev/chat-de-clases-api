@@ -17,9 +17,7 @@ module.exports.UsersController = {
 
   getUser: async (req, res) => {
     try {
-      const {
-        params: { id },
-      } = req;
+      const { id } = req.body;
       let user = await UsersService.getById(id);
       if (!user) {
         Response.error(res, new createError.NotFound());
@@ -40,6 +38,29 @@ module.exports.UsersController = {
       } else {
         const insertedId = await UsersService.create(body);
         Response.success(res, 201, "Usuario Creado", insertedId);
+      }
+    } catch (error) {
+      debug(error);
+      Response.error(res);
+    }
+  },
+
+  login: async (req, res) => {
+    try {
+      const { username, password } = req.body;
+      console.log(password);
+      let user = await UsersService.getName(username);
+      console.log(user.password);
+
+      // Verificar la existencia del usuario antes de asignar a la sesión
+      if (!user) {
+        Response.error(res, new createError.NotFound());
+      } else if (user.password == password) {
+        return res.send(username);
+        // Response.success(res, 200, "Usuario encontrado", user);
+      } else if (user.password !== password) {
+        Response.error(res, new createError.Unauthorized());
+        return;
       }
     } catch (error) {
       debug(error);
